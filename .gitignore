@@ -1,0 +1,30 @@
+# Local .terraform directories
+.terraform/
+**/.terraform/*
+
+# Terraform variable files (sensitive or local config)
+*.tfvars
+*.tfvars.json
+
+# Crash logs
+crash.log
+
+# Terraform plan output
+*.tfplan
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Optional: Local state files (nur, wenn du kein Remote Backend wie S3 nutzt!)
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
+
+# Editor/IDE-typisches (optional)
+*.swp
+.idea/
+.vscode/
+.DS_Store
+*.iml
