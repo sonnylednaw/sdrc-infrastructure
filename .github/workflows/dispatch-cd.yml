@@ -1,0 +1,37 @@
+name: Deploy Lambda on Image Push
+
+on:
+  repository_dispatch:
+    types: [deploy-lambda]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      TF_VAR_lambda_image_tag: ${{ github.event.client_payload.image_tag }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Write image tag to tfvars file
+        run: |
+          echo 'lambda_image_tag = "${{ github.event.client_payload.image_tag }}"' > lambda_image_tag.auto.tfvars
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
